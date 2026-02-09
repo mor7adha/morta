@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MORTADHA - U2R Attacks</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="js/fake_engine.js"></script>
+    <script>window.checkLogin();</script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="role-badge">Super Admin</div>
+        <nav class="nav">
+            <a href="index.html" class="pill">Monitoring</a>
+            <a href="r2l.html" class="pill">R2L</a>
+            <a href="u2r.html" class="pill active">U2R</a>
+            <a href="history.html" class="pill">DDOS</a>
+            <a href="portscan.html" class="pill">Port scan</a>
+            <a href="requests.html" class="pill">Requests</a>
+            <a href="privileges.html" class="pill">Privileges</a>
+            <a href="settings.html" class="pill">Settings</a>
+            <a href="#" onclick="window.doLogout()" class="danger pill">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>User to Root (U2R) Attacks</h2>
+        <div class="panel">
+            <table class="table" id="u2r-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Source</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">© All Rights Kept With MORTADHA's Team</footer>
+
+    <script>
+        const tbody = document.querySelector('#u2r-table tbody');
+
+        // Generate Fake U2R
+        const list = [];
+        const types = ["Buffer_Overflow", "LoadModule", "Rootkit", "Perl"];
+
+        for (let i = 0; i < 2; i++) {
+            list.push({
+                ts: new Date(Date.now() - getRandomInt(0, 30000000)).toISOString(),
+                src: getRandomItem(IPS),
+                type: getRandomItem(types),
+                details: "Privilege escalation attempt"
+            });
+        }
+
+        tbody.innerHTML = list.map(r => `
+      <tr>
+        <td>${r.ts.replace('T', ' ').split('.')[0]}</td>
+        <td><span style="color:red; font-weight:bold">${r.type}</span></td>
+        <td>${r.src}</td>
+        <td>${r.details}</td>
+      </tr>
+    `).join('');
+    </script>
+</body>
+
+</html>

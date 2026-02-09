@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MORTADHA - Monitoring</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="js/fake_engine.js"></script>
+    <script>
+        // Page Guard
+        window.checkLogin();
+    </script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="role-badge">Super Admin</div>
+        <nav class="nav">
+            <a href="index.html" class="pill active">Monitoring</a>
+            <a href="r2l.html" class="pill">R2L</a>
+            <a href="u2r.html" class="pill">U2R</a>
+            <a href="history.html" class="pill">DDOS</a>
+            <a href="portscan.html" class="pill">Port scan</a>
+            <a href="requests.html" class="pill">Requests</a>
+            <a href="privileges.html" class="pill">Privileges</a>
+            <a href="settings.html" class="pill">Settings</a>
+            <a href="#" onclick="window.doLogout()" class="danger pill">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Traffics monitoring</h2>
+
+        <div class="controls card">
+            <div class="control-group">
+                <label>Network Interface (iface)</label>
+                <select id="iface">
+                    <option>Default (Static)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>BPF filter</label>
+                <select id="bpf">
+                    <option>tcp or udp</option>
+                    <option>ip</option>
+                </select>
+            </div>
+            <div class="buttons">
+                <button id="start">Start monitoring</button>
+                <button id="stop" class="danger">Stop</button>
+            </div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-title">SYN/sec</div>
+                <div id="m-syn" class="metric-value">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">SYN/ACK/sec</div>
+                <div id="m-synack" class="metric-value">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">SYN:ACK ratio</div>
+                <div id="m-ratio" class="metric-value">—</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">RST/sec</div>
+                <div id="m-rst" class="metric-value">0</div>
+            </div>
+        </div>
+
+        <div class="cards-row">
+            <div class="panel">
+                <h3>Top UDP ports (pps)</h3>
+                <table class="table" id="udp-table">
+                    <thead>
+                        <tr>
+                            <th>Port</th>
+                            <th>pps</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="panel">
+                <h3>Top ICMP types (pps)</h3>
+                <table class="table" id="icmp-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>pps</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <table class="table" id="mon-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Time</th>
+                        <th>Src</th>
+                        <th>Dst</th>
+                        <th>Proto</th>
+                        <th>SPort</th>
+                        <th>DPort</th>
+                        <th>Len</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">© All Rights Kept With MORTADHA's Team</footer>
+
+    <script>
+        const tbody = document.querySelector('#mon-table tbody');
+        const udpt = document.querySelector('#udp-table tbody');
+        const icmpt = document.querySelector('#icmp-table tbody');
+
+        let timer = null;
+
+        function upgradeUI() {
+            const metrics = window.generateMetrics();
+            document.getElementById('m-syn').textContent = metrics.syn_per_sec;
+            document.getElementById('m-synack').textContent = metrics.synack_per_sec;
+            document.getElementById('m-ratio').textContent = metrics.syn_to_ack_ratio;
+            document.getElementById('m-rst').textContent = metrics.rst_per_sec;
+
+            udpt.innerHTML = metrics.udp_ports.map(x => `<tr><td>${x.port}</td><td>${x.pps}</td></tr>`).join('');
+            icmpt.innerHTML = metrics.icmp_types.map(x => `<tr><td>${x.type}</td><td>${x.pps}</td></tr>`).join('');
+
+            const packets = window.generatePackets();
+            tbody.innerHTML = packets.map(r => `<tr><td>${r.id}</td><td>${r.ts}</td><td>${r.src}</td><td>${r.dst}</td><td>${r.proto}</td><td>${r.sport || ''}</td><td>${r.dport || ''}</td><td>${r.length}</td></tr>`).join('');
+        }
+
+        document.getElementById('start').onclick = () => {
+            if (timer) clearInterval(timer);
+            timer = setInterval(upgradeUI, 1000);
+            upgradeUI();
+        };
+
+        document.getElementById('stop').onclick = () => {
+            if (timer) clearInterval(timer);
+            timer = null;
+        };
+
+        // Auto start
+        document.getElementById('start').click();
+    </script>
+</body>
+
+</html>

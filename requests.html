@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MORTADHA - Requests</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="js/fake_engine.js"></script>
+    <script>window.checkLogin();</script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="role-badge">Super Admin</div>
+        <nav class="nav">
+            <a href="index.html" class="pill">Monitoring</a>
+            <a href="r2l.html" class="pill">R2L</a>
+            <a href="u2r.html" class="pill">U2R</a>
+            <a href="history.html" class="pill">DDOS</a>
+            <a href="portscan.html" class="pill">Port scan</a>
+            <a href="requests.html" class="pill active">Requests</a>
+            <a href="privileges.html" class="pill">Privileges</a>
+            <a href="settings.html" class="pill">Settings</a>
+            <a href="#" onclick="window.doLogout()" class="danger pill">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Password Destroy Requests</h2>
+        <div class="panel">
+            <table class="table" id="req-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Excuse</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">© All Rights Kept With MORTADHA's Team</footer>
+
+    <script>
+        const tbody = document.querySelector('#req-table tbody');
+        const reqs = window.generateRequests();
+
+        tbody.innerHTML = reqs.map(r => `
+      <tr id="req-${r.id}">
+        <td>${r.id}</td>
+        <td>${r.username}</td>
+        <td>${r.excuse}</td>
+        <td>${r.date}</td>
+        <td>
+           <button class="danger" onclick="document.getElementById('req-${r.id}').remove()">Destroy</button>
+        </td>
+      </tr>
+    `).join('');
+    </script>
+</body>
+
+</html>

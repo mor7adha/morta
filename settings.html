@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MORTADHA - Settings</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="js/fake_engine.js"></script>
+    <script>window.checkLogin();</script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="role-badge">Super Admin</div>
+        <nav class="nav">
+            <a href="index.html" class="pill">Monitoring</a>
+            <a href="r2l.html" class="pill">R2L</a>
+            <a href="u2r.html" class="pill">U2R</a>
+            <a href="history.html" class="pill">DDOS</a>
+            <a href="portscan.html" class="pill">Port scan</a>
+            <a href="requests.html" class="pill">Requests</a>
+            <a href="privileges.html" class="pill">Privileges</a>
+            <a href="settings.html" class="pill active">Settings</a>
+            <a href="#" onclick="window.doLogout()" class="danger pill">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>System Settings</h2>
+
+        <div class="card narrow" style="margin: 20px 0;">
+            <h3>Global Configuration</h3>
+            <label><input type="checkbox" checked readonly> Auto-Block Attackers</label>
+            <p class="muted">Whitelisted IPs: 127.0.0.1 (Localhost)</p>
+        </div>
+
+        <h3>Blocked IPs</h3>
+        <div class="panel">
+            <table class="table" id="blocked-table">
+                <thead>
+                    <tr>
+                        <th>IP Address</th>
+                        <th>First Blocked</th>
+                        <th>Count</th>
+                        <th>Reason</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">© All Rights Kept With MORTADHA's Team</footer>
+
+    <script>
+        const tbody = document.querySelector('#blocked-table tbody');
+
+        // Generate Fake Blocked IPs
+        const list = [];
+        for (let i = 0; i < 5; i++) {
+            list.push({
+                ip: getRandomItem(IPS),
+                ts: new Date(Date.now() - getRandomInt(0, 10000000)).toISOString(),
+                count: getRandomInt(1, 10),
+                reason: getRandomItem(ATTACK_TYPES)
+            });
+        }
+
+        function render() {
+            tbody.innerHTML = list.map((r, idx) => `
+          <tr id="row-${idx}">
+            <td>${r.ip}</td>
+            <td>${r.ts.replace('T', ' ').split('.')[0]}</td>
+            <td>${r.count}</td>
+            <td>${r.reason}</td>
+            <td><button class="danger" style="padding:4px 8px; font-size:0.8rem" onclick="document.getElementById('row-${idx}').remove()">Unblock</button></td>
+          </tr>
+        `).join('');
+        }
+        render();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MORTADHA - Login</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="js/fake_engine.js"></script>
+</head>
+
+<body>
+    <!-- Header (Simplified for Login) -->
+    <header class="topbar">
+        <div class="role-badge">Guest</div>
+    </header>
+
+    <main class="container">
+        <h2 class="center" style="text-align:center; margin-top:40px;">Login</h2>
+        <form onsubmit="event.preventDefault(); window.doLogin(this.username.value, this.password.value);"
+            class="card narrow">
+            <label>Username</label>
+            <input type="text" name="username" required placeholder="admin">
+            <label>Password</label>
+            <input type="password" name="password" required placeholder="any password">
+            <button type="submit" style="margin-top:20px; width:100%">Login</button>
+
+            <p class="muted" style="text-align:center; margin-top:20px;">
+                (Static Demo: Use specific usernames like 'admin' or 'auditor' to change roles)
+            </p>
+        </form>
+    </main>
+
+    <footer class="footer">© All Rights Kept With MORTADHA's Team</footer>
+</body>
+
+</html>

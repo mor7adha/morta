@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MORTADHA - DDoS History</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="js/fake_engine.js"></script>
+    <script>window.checkLogin();</script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="role-badge">Super Admin</div>
+        <nav class="nav">
+            <a href="index.html" class="pill">Monitoring</a>
+            <a href="r2l.html" class="pill">R2L</a>
+            <a href="u2r.html" class="pill">U2R</a>
+            <a href="history.html" class="pill active">DDOS</a>
+            <a href="portscan.html" class="pill">Port scan</a>
+            <a href="requests.html" class="pill">Requests</a>
+            <a href="privileges.html" class="pill">Privileges</a>
+            <a href="settings.html" class="pill">Settings</a>
+            <a href="#" onclick="window.doLogout()" class="danger pill">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>DDoS Attack History</h2>
+        <div class="panel">
+            <table class="table" id="ddos-table">
+                <thead>
+                    <tr>
+                        <th>Start Time</th>
+                        <th>Type</th>
+                        <th>Source IP</th>
+                        <th>RPM</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">© All Rights Kept With MORTADHA's Team</footer>
+
+    <script>
+        const tbody = document.querySelector('#ddos-table tbody');
+        const attacks = window.generateAttacks(15);
+
+        tbody.innerHTML = attacks.map(r => `
+      <tr>
+        <td>${r.start_time.replace('T', ' ').split('.')[0]}</td>
+        <td><span style="color:${parseFloat(r.score) > 0.8 ? '#ef4444' : '#f59e0b'}">${r.attack_type}</span></td>
+        <td>${r.src_ip}</td>
+        <td>${r.req_per_min}</td>
+        <td>${r.score}</td>
+      </tr>
+    `).join('');
+    </script>
+</body>
+
+</html>

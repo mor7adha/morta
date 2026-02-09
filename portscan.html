@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MORTADHA - Port Scan Log</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="js/fake_engine.js"></script>
+    <script>window.checkLogin();</script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="role-badge">Super Admin</div>
+        <nav class="nav">
+            <a href="index.html" class="pill">Monitoring</a>
+            <a href="r2l.html" class="pill">R2L</a>
+            <a href="u2r.html" class="pill">U2R</a>
+            <a href="history.html" class="pill">DDOS</a>
+            <a href="portscan.html" class="pill active">Port scan</a>
+            <a href="requests.html" class="pill">Requests</a>
+            <a href="privileges.html" class="pill">Privileges</a>
+            <a href="settings.html" class="pill">Settings</a>
+            <a href="#" onclick="window.doLogout()" class="danger pill">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Port Scan Alerts</h2>
+        <div class="panel">
+            <table class="table" id="ps-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Source</th>
+                        <th>Target</th>
+                        <th>Details</th>
+                        <th>Severity</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">© All Rights Kept With MORTADHA's Team</footer>
+
+    <script>
+        const tbody = document.querySelector('#ps-table tbody');
+
+        // Generate Fake Port Scans
+        const list = [];
+        for (let i = 0; i < 8; i++) {
+            list.push({
+                ts: new Date(Date.now() - getRandomInt(0, 5000000)).toISOString(),
+                src: getRandomItem(IPS),
+                dst: "192.168.1.200",
+                details: `Ports: ${getRandomInt(50, 1000)} scanned`,
+                severity: "high"
+            });
+        }
+
+        tbody.innerHTML = list.sort((a, b) => new Date(b.ts) - new Date(a.ts)).map(r => `
+      <tr>
+        <td>${r.ts.replace('T', ' ').split('.')[0]}</td>
+        <td>PORT_SCAN</td>
+        <td>${r.src}</td>
+        <td>${r.dst}</td>
+        <td>${r.details}</td>
+        <td><span style="color:#ef4444; font-weight:bold">${r.severity}</span></td>
+      </tr>
+    `).join('');
+    </script>
+</body>
+
+</html>
